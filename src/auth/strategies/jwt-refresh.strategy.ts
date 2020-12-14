@@ -6,24 +6,20 @@ import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh-token') {
 
     constructor(private authService: AuthService, private configService: ConfigService){
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             secretOrKeyProvider: (request, jwtToken, done) => {
-                done(null, configService.get('JWT_SECRET'));
+                done(null, configService.get('JWT_REFRESH_SECRET'));
               },
         });
     }
 
-    async validate(payload: JwtPayload){
-        console.log('validate normal jwt: ', payload);
-        
+    async validate(payload){        
         const user = await this.authService.validateUser(payload);
-        console.log('after validate normal: ', user);
         
-
         if (!user) {
             throw new UnauthorizedException();
         }

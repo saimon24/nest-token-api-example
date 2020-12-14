@@ -11,7 +11,8 @@ export const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
         select: false
-    }
+    },
+    currentHashedRefreshToken: String
 }, {
   timestamps: true
 });

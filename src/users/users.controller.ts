@@ -23,6 +23,14 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard())
+  @Get('/secret')
+  async getSecretUserInfo(@Res() res) {    
+    return res.status(HttpStatus.OK).json({
+      msg: 'This is my secret message from the server!'
+    });
+  }
+
+  @UseGuards(AuthGuard())
   @Get(':userID')
   async getUser(@Res() res, @Param('userID') userID) {
     const user = await this.usersService.findOne(userID);
@@ -36,11 +44,4 @@ export class UsersController {
     return this.usersService.remove(id);
   }
 
-  @UseGuards(AuthGuard())
-  @Get('/secret')
-  async getSecretUserInfo(@Res() res) {
-    return res.status(HttpStatus.OK).json({
-      msg: 'This is my secret message from the server!'
-    });
-  }
 }
