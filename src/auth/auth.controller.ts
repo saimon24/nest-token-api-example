@@ -23,28 +23,26 @@ export class AuthController {
     @UseGuards(AuthGuard('jwt-refresh-token'))
     @Get('/refresh')
     async refresh(@Body() body, @Res() res, @Req() req, @Headers('Authorization') token) {
-        console.log('in refresh logic, user already validated');
-        console.log('user is: ', req.user);
-        console.log('request header: ', token);
-        
+        const refreshToken = token.split('Bearer ')[1];
+
         const user = req.user;
-        const isMatching = await this.userService.compareUserTokenMatches(token, user);
-        console.log('ismatching: ', isMatching);
+        const isMatching = await this.userService.compareUserTokenMatches(refreshToken, user);
         
         if (isMatching) {
             const token = this.authService.getAccessToken(user._id, user._username);
-            console.log('new token: ', token);
-            return res.json({ acessToken: token});
+            setTimeout(() => {
+                return res.json({ accessToken: token});
+            }, 2000)
         } else {
             return res.status(HttpStatus.BAD_REQUEST).json({msg: 'Invalid refresh token'});
         }
     }
 
-    @UseGuards(AuthGuard())
+    // @UseGuards(AuthGuard())
     @Post('/logout')
     async logout(@Body() body, @Res() res, @Req() req) {
-        console.log('user: ', req.user);
-        await this.userService.removeRefreshToken(req.user._id);
+        // console.log('user: ', req.user);
+        // await this.userService.removeRefreshToken(req.user._id);
         return res.json({ msg: 'Successful logged out.'});
     }
 }

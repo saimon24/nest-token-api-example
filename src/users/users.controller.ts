@@ -24,10 +24,13 @@ export class UsersController {
 
   @UseGuards(AuthGuard())
   @Get('/secret')
-  async getSecretUserInfo(@Res() res) {    
-    return res.status(HttpStatus.OK).json({
-      msg: 'This is my secret message from the server!'
-    });
+  async getSecretUserInfo(@Res() res) {
+    setTimeout(() => {
+      console.log('RETURN NOW');
+      return res.status(HttpStatus.OK).json({
+        msg: 'This is my secret message from the server!'
+      });
+    }, 2000);
   }
 
   @UseGuards(AuthGuard())

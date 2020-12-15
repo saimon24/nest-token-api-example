@@ -27,9 +27,9 @@ export class UsersService {
     return this.userModel.deleteOne({ id }).exec();
   }
 
-  async setCurrentRefreshToken(refreshToken, id) {
+  async setCurrentRefreshToken(refreshToken, id) {    
     const currentHashedRefreshToken = await bcrypt.hash(refreshToken, 10);
-    const updatedUser = await this.userModel.findOneAndUpdate({_id: id}, { currentHashedRefreshToken } );
+    const updatedUser = await this.userModel.findOneAndUpdate({_id: id}, { currentHashedRefreshToken } );    
   }
 
   async removeRefreshToken(id) {
@@ -40,7 +40,7 @@ export class UsersService {
 
   async compareUserTokenMatches(refreshToken: string, user) {   
     if (!user.currentHashedRefreshToken) return false;
-
+    
     const isRefreshTokenMatching = await bcrypt.compare(
       refreshToken,
       user.currentHashedRefreshToken
